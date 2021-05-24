@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="test.css">
+</head>
+<body>
+	<h1>WELCOME!!!</h1>
+	<div id = "root" class = "container">
+		<!-- <div class = "row post" >
+			<div class="row h-75 w-100">
+				<div class = "col-6">
+					<img src="../media/images/image1.jpg" class = "img-thumbnail" style = "height: 10rem;width: 10rem">
+				</div>
+				<div class = "col-6">
+					<h1> UserName <h1>
+						<br>
+					<p> Caption <p>
+					<h2> Reach <h2> 
+				</div>
+			</div>
+			<div class="row w-100 d-flex flex-row justify-content-around">
+				<div class = "col-3">
+					Like
+				</div>
+				<div class = "col-3">
+					Comment
+				</div>
+				<div class = "col-3">
+					Impression
+				</div>
+				<div class = "col-3">
+					Engagement
+				</div>
+			</div>
+		</div> -->
+	</div>
+	<div class = "container">
+		<form id="report">
+		  	<div class="mb-3">
+		    	<label for="report_name" class="form-label">Report Name</label>
+		    	<input type="textl" class="form-control" id="report_name" name = "r_name" aria-describedby="emailHelp">
+		  	</div>
+		  	<div class="mb-3">
+		    	<label for="report_hash" class="form-label">Report Hashtag</label>
+		    	<input type="text" class="form-control" id="report_hash" name = "r_hash">
+		  	</div>
+  			<button type="submit" class="btn btn-primary" onclick="make_report()">Submit</button>
+		</form>
+		<a href="reports.html"><button type="submit" class="btn btn-primary">
+			View Reports
+		</button></a>
+	</div>
+	<!-- <button type="button" class="btn btn-primary" onclick= "make_report()">Make Report</button> -->
+<script type="text/javascript" src= "test.js"></script>
+<script type="text/javascript">
+
+	function new_report(impr,reach,engage,r_name,r_hash){
+		console.log(r_name);
+		console.log(r_hash);
+		console.log(impr + " " + reach + " " + engage);
+
+		var imp = impr + reach*1.5 + engage*2;
+		let _data = {
+		  name : r_name,
+		  hashtag : r_hash, 
+		  impact : imp
+		}
+
+		fetch('http://127.0.0.1:8000/Report/', {
+		  method: "POST",
+		  body: JSON.stringify(_data),
+		  headers: {"Content-type": "application/json; charset=UTF-8"}
+		})
+		.then(response => response.json()) 
+		.then(json => console.log(json))
+		.catch(err => console.log(err))
+
+
+	}
+
+
+
+	async function make_report(){
+	var x = document.getElementById("report");
+	r_name = x.elements["r_name"].value;
+	r_hash = x.elements["r_hash"].value;
+	var impr = 0;
+	var reach = 0;
+	var engage = 0; 
+	var api_link = "http://127.0.0.1:8000/Post/";
+
+
+	var cbs = document.getElementsByClassName("checkbox");
+	// console.log("Checkbox :" + cbs.length)
+	let reqHeader = new Headers();
+	reqHeader.append('Content-Type', 'application/json');
+	// reqHeader.append("Access-Control-Allow-Origin", "*");
+	let initObject = {
+    method: 'GET', headers: reqHeader,
+	};
+	
+	await fetch("http://127.0.0.1:8000/Post/",initObject)
+	.then(function(response){
+		return response.json();
+	})
+	.then(function(data){
+		var i = 0;
+		for (i = 0 ; i < cbs.length ; i++){
+		// console.log(x.id);
+
+		if(cbs[i].checked == true){
+			var info = data[i];
+			impr += info.impressions;
+			reach += info.reach;
+			engage += info.engagement;
+			console.log(impr + " " + reach + " " + engage);
+		}
+	}
+	// console.log(impr + " " + reach + " " + engage);
+	new_report(impr,reach,engage,r_name,r_hash);
+
+	})
+	.catch(function(err){
+		var body = document.getElementById("root");
+		var error = document.creteElement("h2");
+		error.innerHTML = "PLease Try Again!!";
+		body.appendChild(error);
+		console.log("Something Went wrong",err);
+	})
+	}
+	// console.log("Total impression : " + impr);
+	// console.log("Total reach : " + reach);
+	// console.log("Total engagement : " + engage);
+
+</script>
+</body>
+</html>

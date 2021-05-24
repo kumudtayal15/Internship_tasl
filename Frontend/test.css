@@ -1,0 +1,28 @@
+body,
+html {
+  width: 100%;
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+.container{
+	/*height: 100%;*/
+	width: 100%;
+	/*margin: 0px;*/
+	/*margin-right: 0px;
+	padding: 0px;*/
+}
+
+.img-fluid{
+	height : 100%;
+}
+
+.post{
+	border : solid 1px #031927;
+	background-color: #9DD1F1;
+	width: 100%;
+	margin-right: 0px;
+	margin-left: 0px;
+	height : 20rem;
+}
